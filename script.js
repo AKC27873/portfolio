@@ -1,40 +1,52 @@
-const postContainer = document.getElementById('posts');
-const form = document.getElementById('blogForm');
-const titleInput = document.getElementById('title');
-const contentInput = document.getElementById('conent');
+const themeToggle = document.getElementById("themeToggle");
+const markdownInput = document.getElementById("markdownInput");
+const htmlPreview = document.getElementById("htmlPreview");
+const saveBtn = document.getElementById("saveBtn");
+const blogPosts = document.getElementById("blogPosts");
 
 
-document.addEventListener('DOMConentLoaded', ()=> {
-	const savedPosts = JSON.parse(localStorage.getItem('blogPosts')) || [];
-	savedPosts.forEach(post => renderPost(post));
+
+// Markdown Live Preview
+markdownInput.addEventListener("input", () => {
+	htmlPreview.innerHTML = marked.parse(markdownInput.value);	
 });
 
-form.addEventListener('submit', function(e){
-	e.preventDefault();
+// Save post 
+saveBtn.addEventListener("click", () => {
+	const content = markdownInput.value;
+	if (content.trim()) return alert("Please write something!");
+	const postHTML = marked.parse(content);
+	const wrapper = document.createElement("div");
+	wrapper.innerHTML = postHTML;
+	blogPosts.prepend(wrapper);
 
-const title = titleInput.value.trim();
-const content = contentInput.value.trim();
-const date = new Date().toLocaleDateString();
+	let storedPosts = JSON.parse(localStorage.get("posts")) || [];
+	storedPosts.unshift(content);
+	localStorage.setItem("posts", JSON.stringify(storedPosts));
 
-
-if (title && content){
-	const newPost = {title, content, date};
-
-	const posts = JSON.parse(localStorage.getItem('blogPosts')) || [];
-	posts.unshift(newPost);
-	localStorage.setItem('blogPosts', JSON.stringify(posts));
-	renderPost(newPost);
-	form.reset();	
-}
+	markdownInput.value = "";
+	htmlPreview.innerHTML = "";
 });
 
-function renderPost(post){
-	const postEl = document.createElement('div');
-	postEl.classname = 'post';
-	postEl.innerHTML = `
-		<h3>${post.title}</h3>
-		<h3>${post.content}</h3>
-		<small>Posted on ${post.date}</small
-	`;
-} 
+// Loaded saved posts 
 
+window.addEventListener("DOMContentLoaded", () => {
+	const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+	storedPosts.forEach( content => {
+		const wrapper = document.createElement("div");
+		wrapper.innerHTML = marked.parse(content);
+		blogPosts.appendChild(wrapper);
+	});
+
+// Theme 
+	const storedTheme = localStorage.getItem("theme") || "dark";
+	document.body.classlist.toggle("theme-light", storedTheme === "light");
+	themeToggle.textContent = storedTheme === "light" ? "☀️" : "🌙";
+});
+
+// Toggle theme 
+themeToggle.addEventListener ("click", () => {
+	const islight = document.body.classlist.toggle("theme-light");
+	localStorage.setItem("theme", islight ? "light" : "dark");
+	themeToggle.textContent = islight ? "☀️" : "🌙";
+});
