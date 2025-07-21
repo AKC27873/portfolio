@@ -1,26 +1,119 @@
-.project-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+:root {
+	--bg-dark: #0f0f0f;
+	--bg-light:#fefefe;
+	--text-dark:#00ffff;
+	--text-light:#111;
+	--accent:#ff00ff;
+	--glow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;	
 }
 
-.project-card {
-	background: #2c2c2c;
-	padding: 20px;
-	border-radius: 8px;
+body{
+	margin:0;
+	font-family: 'Orbitron', sans-serif;
+	background: var(--bg-dark);
+	color: var(--text-dark);
+	transition: background 0.5s, color 0.5s;
+}
+
+body.theme-light {
+	background: var(--bg-light);
+	color:var(--text-light);
 }
 
 
-@media (max-width: 600px){
-	header, .container {
-		padding: 10px;
+header, footer {
+	text-align: center;
+	padding: 1rem;
+	background: #111;
+	color: #0ff;
+	border-bottom: 2px solid #0ff;
+	text-shadow: var(--glow);
+}
+
+h1 {
+	margin: 0;
+	font-size: 2.5rem;
+	animation: flicker 2s infinite alternate;
+}
+
+button {
+	background: transparent;
+	border: 1px solid #0ff;
+	color: #0ff;
+	padding: 0.5 1rem;
+	font-family: inherit;
+	cursor: pointer;
+	background: 0.3s;
+}
+button:hover {
+	background: rgba(0, 255, 255, 0.1);
+}
+
+textarea {
+	width:100%;
+	height: 150px;
+	background: #111;
+	color: #0ff;
+	border: 1px solid #0ff;
+	font-family: monospace;
+	padding: 1rem;
+	margin-bottom: 1rem;
+}
+
+main {
+	padding: 2rem;
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+#htmlPreview {
+	border: 1px dashed #0ff;
+	padding: 1rem;
+	background: #111;
+	min-height: 100px;
+}
+
+#blogPosts > div {
+	margin-top: 1rem;
+	padding: 1rem;
+	background: #111;
+	border-left: 3px solid var(--accent);
+	animation: glitch 1.5s infinite alternate-reverse;
+}
+
+.theme-light #blogPosts > div {
+	background: #f0f0f0;
+	border-color: #f0f;
+}
+
+@keyframes flicker {
+	0%, 19%, 21%, 23%, 25%, 54%, 56%, 100%,{
+		opacity: 1;
 	}
-input, textarea, button {
-	font-size: 16px;
+	20%, 24%, 55%{
+		opacity: 0.3;
+	}
 }
 
-.project-grid {
-	grid-template-columns: 1fr;
-}
-
-}
+@keyframes glitch {
+	0%{
+		transform: translate(0);
+	}
+	20% {
+		transform: translate(1px, -1px);
+	}
+	40% {
+		transform: translate(-1px, 2px);
+	}
+	60% {
+		transform: translate(2px, 1px);
+	}
+	80% {
+		transform: translate(-1px, -1px);
+	}
+	100% {
+		transform: translate(1px, 1px);
+	}
+}	
